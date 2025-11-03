@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MainDAO">
+	<select id="selectTotalDocCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalDocCount */
+		SELECT     
+			 COUNT(*) CNT
+		FROM TB_OCR_DOC_MST
+		WHERE 1=1
+		AND DEL_YN = 'N'
+	</select>
+	
+	<select id="selectTotalRecognitionCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalRecognitionCount */
+		SELECT     
+			 COUNT(*) CNT
+		FROM TB_OCR_DOC_MST
+		WHERE 1=1
+		AND STAT_CD = '20'
+		AND DEL_YN = 'N'
+	</select>
+	
+	<select id="selectTotalLearningCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalLearningCount */
+		SELECT     
+			 COUNT(*) CNT
+		FROM TB_OCR_DOC_MST
+		WHERE 1=1
+		AND STAT_CD IN ('30')
+		AND DEL_YN = 'N'
+	</select>
+	
+	<select id="selectTotalEtcCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalEtcCount */
+		SELECT     
+			 COUNT(*) CNT
+		FROM TB_OCR_DOC_MST
+		WHERE 1=1
+		AND STAT_CD NOT IN ('20', '30')
+		AND DEL_YN = 'N'
+	</select>
+	
+	<!-- 추가 : 2022.09.27, 송창화 상무 -->
+	<!--  1) 전체 문서 -->
+	<select id="selectTotalDocCountAutoml" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalDocCountAutoml */
+		SELECT     
+			  COUNT(*) CNT
+		 FROM TB_AUTOML_MASTER
+		WHERE 1=1
+		  AND DEL_YN = 'N'
+	</select>
+	
+	<!--  2) 데이터 전처리 완료 -->
+	<select id="selectTotalRecognitionCountAutoml" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalRecognitionCountAutoml */
+		SELECT     
+			  COUNT(*) CNT
+		 FROM TB_AUTOML_MASTER
+		WHERE 1=1
+		  AND STAT_CD IN ('11')
+		  AND DEL_YN  = 'N'
+	</select>
+	
+	<!--  3) 학습 완료 -->
+	<select id="selectTotalLearningCountAutoml" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalLearningCountAutoml */
+		SELECT     
+			  COUNT(*) CNT
+		 FROM TB_AUTOML_MASTER
+		WHERE 1=1
+		  AND STAT_CD IN ('20')
+		  AND DEL_YN = 'N'
+	</select>
+	
+	<!--  4) 확정 완료 -->
+	<select id="selectTotalEtcCountAutoml" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* MainDAO.selectTotalEtcCountAutoml */
+		SELECT     
+			  COUNT(*) CNT
+		 FROM TB_AUTOML_MASTER
+		WHERE 1=1
+		  AND STAT_CD IN ('30')
+		  AND DEL_YN = 'N'
+	</select>	
+		
+	
+</sqlMap>

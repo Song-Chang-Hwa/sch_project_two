@@ -1,0 +1,114 @@
+<h2 class="tit-level1">데이터 확인</h2>
+
+<div class="subConView">			
+	<div class="conWrap">
+
+		<div class="colRow">
+			<div class="col30" style="min-width:600px;">
+				<div class="roundBorder" style="height:800px;">
+					<div class="writeType01">										
+						<div class="requiredInfor">					
+							<div class="form-Area">
+								<div class="form-group">
+									<label class="control-label"><span class="">문서 명</span></label>
+									<div class="formInput">
+										<input type="text" class="form-control" [(ngModel)]="searchtxt" (keyup.enter)="onSearchOcrDocMstList('0')">
+									</div>																			
+								</div>								
+								<div class="form-group">
+									<label class="control-label">처리상태</label>
+									<div class="formInput">
+										<div class="selects">
+											<select class="form-control" [(ngModel)]="searchStatCd" name="">
+												<option value="10" selected="">데이터 확인</option>
+												<option value="00">업로드</option>
+											</select>
+										</div>
+									</div>																				
+								</div>																						
+							</div>
+						</div>
+					</div>							
+
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>Total : <span>{{OCRTABLETOTCNT}}</span></li>									
+							</ul>
+							
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-info" (click)="onSearchOcrDocMstList('0')">조회</a>
+								</div>
+							</div>
+							<!-- 버튼 끝 -->
+						</div>
+						<div class="table_type1" >
+							<table id="ocrDocMst" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page1></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col40" style="min-width:1200px;">
+				<div class="roundBorder" style="height:450px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>컬럼 개수 : <span>{{OCRTEXTTABLETOTCNT}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>[ 컬럼별 데이터 분석 결과 ]</span></li>						
+							</ul>
+							<ul class="board_total">	
+								<li>제1사분위(Q1) : 25%의 위치, 제2사분위(Q2) : 50%의 위치, 제3사분위(Q3) : 75%의 위치</li>								
+							</ul>
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-primary" (click)="onDataConfirmProcess()">데이터 확인</a>
+								</div>
+							</div>
+							<!-- 버튼 끝 -->
+						</div>
+
+						<div class="table_type1" >
+							<table id="ocrDocText" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page2></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col30" style="min-width:1200px;">
+				<div class="roundBorder" style="height:350px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li><span>데이터 분포 (Boxplot)</span></li>					
+							</ul>
+							<ul class="board_total">	
+								<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Boxplot(박스플롯) : 사분위값(Q1:25%/Q2:50%/Q3:75%)을 이용하여 데이터의 분포/모양/대칭성/극단 값을 쉽게 파악할 수 있는 그림</li>								
+							</ul>
+							<ul class="board_commentr">	
+								<li>※ [이미지]를 클릭하면 이미지가 [확대]됩니다.</li>								
+							</ul>
+						</div>
+						<div class="table_type1" >
+							<table id="automlBoxplotImage" summary="목록" style="width: 48%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page3></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+
+<!-- .main-section e -->

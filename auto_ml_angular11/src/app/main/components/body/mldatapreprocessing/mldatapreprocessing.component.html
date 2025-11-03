@@ -1,0 +1,210 @@
+<h2 class="tit-level1">데이터 전처리</h2>
+
+<div class="subConView">			
+	<div class="conWrap">
+
+		<div class="colRow">
+			<div class="col30" style="min-width:600px;">
+				<div class="roundBorder" style="height:808px;">
+					<div class="writeType01">										
+						<div class="requiredInfor">					
+							<div class="form-Area">
+								<div class="form-group">
+									<label class="control-label"><span class="">문서 명</span></label>
+									<div class="formInput">
+										<input type="text" class="form-control" [(ngModel)]="searchtxt" (keyup.enter)="onSearchOcrDocMstList('0')">
+									</div>																			
+								</div>
+								<div class="form-group">
+									<label class="control-label">처리상태</label>
+									<div class="formInput">
+										<div class="selects">
+											<select class="form-control" [(ngModel)]="searchStatCd" name="">
+												<option value="11" selected="">데이터 전처리</option>
+												<option value="00">업로드</option>
+												<option value="10">데이터 확인</option>												
+											</select>
+										</div>
+									</div>																				
+								</div>
+																						
+							</div>
+						</div>
+					</div>							
+
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>Total : <span>{{OCRTABLETOTCNT}}</span></li>									
+							</ul>
+							
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-info" (click)="onSearchOcrDocMstList('0')">조회</a>
+								</div>
+							</div>
+							<!-- 버튼 끝 -->
+						</div>
+						<div class="table_type1" >
+							<table id="ocrDocMst" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page1></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col40" style="min-width:1100px;">
+				<div class="roundBorder" style="height:537px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>칼럼 개수 : <span>{{OCRTEXTTABLETOTCNT}}</span></li>									
+							</ul>
+							<ul class="board_commentr">	
+								<li><span>※ [목표변수는 반드시 1 칼럼만 선택하셔야 모델학습이 가능합니다]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;※목표변수(결과변수) : 추정하거나 예측하고 싶은 목적 데이터 (예)등급/가격/성별/학력</li>								
+							</ul> 
+
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-primary" (click)="onPrecprocessingTargetApply()">목표변수 적용</a>
+								</div>
+							</div>
+							<!-- 버튼 끝 -->
+						</div>						
+						<div class="table_type1" >
+							<table id="ocrDocText1" summary="목록" style="width:100%;">
+	                            <colgroup>
+									<col style="width: 300px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;"> 
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width: 100px;">
+									<col style="width:  70px;">
+	                            </colgroup>
+	                            <thead>
+	                    	    <tr>
+	                                <th style="white-space:pre;">칼럼 명</th> 	                                
+	                                <th style="white-space:pre;">칼럼 유형</th>
+	                                <th style="white-space:pre;">최소값</th>
+	                                <th style="white-space:pre;">최대값</th>
+	                                <th style="white-space:pre;">평균</th>
+	                                <th style="white-space:pre;">표준편차</th>
+									<th style="white-space:pre;">분산</th>
+	                                <th style="white-space:pre;">25%</th>
+									<th style="white-space:pre;">50%</th>
+									<th style="white-space:pre;">75%</th>
+									<th style="white-space:pre;">누락값 수</th>
+									<th style="white-space:pre;"><input type="checkbox" [(ngModel)]="targetVallueYnAll" style="margin:0px;vertical-align:middle;" (change)="changeTargetValueYnAll()">목표변수<p>선택</th>
+	                    	    </tr>                                                                    
+								</thead>                                 
+                          		<tbody>                                                                  						
+									<tr *ngFor="let ocrDocText1 of OcrDocTextData;let idx=index">
+										<td class="left"   style="white-space:pre;">{{ocrDocText1.TEXT_NM}}				</td>
+										<td class="center" style="white-space:pre;">{{ocrDocText1.TEXT_TYPE_GUBUN_NM}}	</td> 
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.MININUM_VALUE}}		</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.MAXINUM_VALUE}}		</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.MEAN_VALUE}}			</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.STANDARD_DEVIATION}}	</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.VARIANCE_VALUE}}		</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.PERCENTAGE_25_VALUE}}	</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.PERCENTAGE_50_VALUE}}	</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.PERCENTAGE_75_VALUE}}	</td>
+										<td class="right"  style="white-space:pre;">{{ocrDocText1.MISSING_VALUE_CNT}}	</td>
+										<td><input type="checkbox" [(ngModel)]="ocrDocText1.TARGET_VALUE_YN">			</td>
+									</tr>   
+									<ng-container *ngIf="OcrDocTextData && OcrDocTextData.length == 0">
+									<tr height="44px">
+										<td colspan="7" style="border:0">
+											<div class="search_result"><h4>등록된 정보가 없습니다.</h4></div>
+										</td>	
+									</tr>  
+									</ng-container>		
+								</tbody>	
+																
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page2></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col50" style="min-width:1100px;">
+				<div class="roundBorder" style="height:268px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li><span>데이터 정제 (Data Cleansing)</span></li>									
+							</ul>
+							<ul class="board_commentr">	
+								<li>※ [결측값, Missing Value] 알려지지 않고, 수집되지 않거나 잘못 입력된 데이터 세트의 값</li>								
+							</ul> 
+
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-info" (click)="onPrecprocessingDataCleansingApply()">데이터 전처리 적용</a>
+								</div>
+							</div>
+							<ul class="board_commentr">	
+								<li>※ [이상값, 극단값, Outiler] 특정 데이터 변수의 분포에서 비정상적으로 벗어난 값&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>								
+							</ul>
+
+							<!-- 버튼 끝 -->
+						</div>						
+						<div class="table_type1" >
+							<table id="ocrDocText2" summary="목록" style="width:100%;">
+	                            <colgroup>
+									<col style="width: 25%;">
+									<!-- <col style="width: 25%;"> -->
+									<col style="width: 25%;">
+									<col style="width: 25%;">
+	                            </colgroup>
+	                            <thead>
+	                    	    <tr>
+	                                <th style="white-space:pre;">[데이터 전처리]구분</th> 	                                
+	                                <!--<th style="white-space:pre;">Setting Value</th>		  -->							
+									<th style="white-space:pre;"><input type="checkbox" [(ngModel)]="removeYnAll" style="margin:0px;vertical-align:middle;" (change)="changeRemoveYnYnAll()">전처리 적용 여부 선택</th>
+									<th style="white-space:pre;"><input type="checkbox" [(ngModel)]="useYnAll"    style="margin:0px;vertical-align:middle;" (change)="changeUseYnYnAll()">사용 여부 선택</th>
+	                    	    </tr>                                                                    
+								</thead>                                 
+                          		<tbody>                                                                  						
+									<tr *ngFor="let ocrDocText2 of PreprocessingCleansingData;let idx=index">
+										<td class="left"   style="white-space:pre;">{{ocrDocText2.PREPROCESSING_GUBUN}}	</td>
+										<!-- <td class="left"   style="white-space:pre;">{{ocrDocText2.SETTING_VALUE}}		</td> -->
+										<td><input type="checkbox" [(ngModel)]="ocrDocText2.REMOVE_YN">					</td>
+										<td><input type="checkbox" [(ngModel)]="ocrDocText2.USE_YN">					</td>
+									</tr>   
+									<ng-container *ngIf="PreprocessingCleansingData && PreprocessingCleansingData.length == 0">
+									<tr height="44px">
+										<td colspan="7" style="border:0">
+											<div class="search_result"><h4>등록된 정보가 없습니다.</h4></div>
+										</td>	
+									</tr>  
+									</ng-container>		
+								</tbody>	
+																
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page3></app-page>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>	
+	</div>
+</div>
+
+<!-- .main-section e -->

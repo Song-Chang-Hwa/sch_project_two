@@ -1,0 +1,133 @@
+<h2 class="tit-level1">모델 평가/확정</h2>
+
+<div class="subConView">			
+	<div class="conWrap">
+
+		<div class="colRow">
+			<div class="col30" style="min-width:600px;">
+				<div class="roundBorder" style="height:800px;">
+					<div class="writeType01">										
+						<div class="requiredInfor">					
+							<div class="form-Area">
+								<div class="form-group">
+									<label class="control-label"><span class="">문서 명</span></label>
+									<div class="formInput">
+										<input type="text" class="form-control" [(ngModel)]="searchtxt" (keyup.enter)="onSearchOcrDocMstList('0')">
+									</div>																			
+								</div>
+								<div class="form-group">
+									<label class="control-label">처리상태</label>
+									<div class="formInput">
+										<div class="selects">
+											<select class="form-control" [(ngModel)]="searchStatCd" name="">
+												<option value="20" selected="">모델 확습</option>
+												<option value="30">모델 확정</option>
+											</select>
+										</div>
+									</div>																				
+								</div>
+																						
+							</div>
+						</div>
+					</div>							
+
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>Total : <span>{{OCRTABLETOTCNT}}</span></li>									
+							</ul>
+							
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-info" (click)="onSearchOcrDocMstList('0')">조회</a>
+								</div>
+							</div>
+							<!-- 버튼 끝 -->
+						</div>
+						<div class="table_type1" >
+							<table id="ocrDocMst" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page1></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col30" style="min-width:720px;">
+				<div class="roundBorder" style="height:800px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>Total : <span>{{OCRTEXTTABLETOTCNT}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>모델 학습 목록</span></li>
+							</ul>
+							<ul class="board_commentr">	
+								<li>※정밀도(Precision) : 모델이 True라고 분류한 것 중에서 실제 True인 것의 비율&nbsp;&nbsp;&nbsp;</li>								
+							</ul>
+							<ul class="board_commentr">	
+								<li>※ 민감도(Sensitivity) : 실제 True인 것 중에서 모델이 True라고 예측한 것의 비율&nbsp;</li>									
+							</ul>
+							<ul class="board_commentr">	
+								<li>※ F1-score : 정밀도와 민감도의 조화평균 -> 2*(정밀도*민감도)/(정밀도+민감도)</li>								
+							</ul>
+						</div>
+						<div class="table_type1" >
+							<table id="automlTrainingResult" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page1></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col30" style="min-width:510px;">
+				<div class="roundBorder" style="height:400px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li><span>Confusion Matrix</span>&nbsp;&nbsp;&nbsp;&nbsp;(혼동행렬)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>(신경망)</span>&nbsp;훈련 데이터 대 검증 데이터 손실 그래프</li>		
+							</ul>
+							<ul class="board_commentr">	
+								<li>※오차행렬 : 학습을 통한 예측성능을 측정하기 위해 예측결과 값과 실제 값을 비교하기 위한 표</li>								
+							</ul>
+						</div>
+						<div class="table_type1" >
+							<table id="automlConfusionMatrix" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page3></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col30" style="min-width:510px;">
+				<div class="roundBorder" style="height:397px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li><span>ROC Curve</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;※ [이미지]를 클릭하면 이미지가 [확대]됩니다.</li>																
+							</ul>
+							<ul class="board_commentr">	
+								<li>※ (수신자 판단 곡선) 모델의 효율성을 민감도와 특이도를 이용하여 그래프로 나타낸 것.</li>								
+							</ul>
+						</div>
+						<div class="table_type1" >
+							<table id="automlRocCurve" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page3></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+
+<!-- .main-section e -->

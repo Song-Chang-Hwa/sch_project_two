@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RecognitionDAO">
+ 	<sql id="pagestart">
+ 		<![CDATA[
+		]]>
+ 	</sql>
+ 	
+ 	<sql id="pageend">
+ 		<![CDATA[
+		  LIMIT  #pageNo#, #PAGESIZE#
+		]]>
+ 	</sql>
+ 	
+	<!-- 데이터 읽어 들이기 > 데이터 마스터 목록 [조회] 처리 -->
+ 	<select id="selectAutomlMasterList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectAutomlMasterList */
+		SELECT
+			   T1.DOC_SN
+			 , CONCAT(T1.DOC_NM, '-----', T1.DOC_SN) DOC_NM 
+			 , T1.STAT_CD
+			 , (CASE WHEN T1.STAT_CD = '00' THEN '업로드'	
+			         WHEN T1.STAT_CD = '10' THEN '데이터 확인'
+			         WHEN T1.STAT_CD = '11' THEN '데이터 전처리'
+			         WHEN T1.STAT_CD = '20' THEN '모델 학습'
+			         WHEN T1.STAT_CD = '30' THEN '모델 확정'
+			         ELSE '기타'
+			   END) AS STAT_CD_NM	
+			 , T1.ROW_CNT
+			 , T1.COLUMN_CNT
+			 , T1.TRAINING_CNT
+			 , T1.FILE_ORI_NM
+			 , T1.ERROR_MSG
+			 , T1.REGI_ID
+			 , IFNULL(DATE_FORMAT(REGI_DTTM, '%Y-%m-%d'), '') AS REGI_DTTM
+		  FROM TB_AUTOML_MASTER T1
+		 WHERE T1.DEL_YN = 'N'
+        <isNotEmpty property="STAT_CD">	AND T1.STAT_CD = #STAT_CD#   											</isNotEmpty>
+        <isNotEmpty  property="FUCTION_GUBUN"	prepend="AND">	
+			<isEqual property="FUCTION_GUBUN" 	compareValue="00"> T1.STAT_CD IN ('00')							</isEqual>		<!-- 00 : 업로드      -->			
+			<isEqual property="FUCTION_GUBUN" 	compareValue="10"> T1.STAT_CD IN ('00', '10')					</isEqual>		<!-- 10 : 데이터 확인  -->
+			<isEqual property="FUCTION_GUBUN" 	compareValue="11"> T1.STAT_CD IN ('00', '10', '11', '20')		</isEqual>		<!-- 11 : 데이터 전처리 -->	
+			<isEqual property="FUCTION_GUBUN" 	compareValue="20"> T1.STAT_CD IN ('11', '20')					</isEqual>		<!-- 20 : 모델 학습    -->		
+			<isEqual property="FUCTION_GUBUN" 	compareValue="30"> T1.STAT_CD IN ('20', '30')					</isEqual>		<!-- 30 : 모델 확정    -->		
+		</isNotEmpty>
+        <isNotEmpty property="FILE_NM">	AND T1.DOC_NM LIKE CONCAT('%',#FILE_NM#,'%')							</isNotEmpty>
+		ORDER BY T1.DOC_SN DESC
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>
+	
+	<select id="selectAutomlMasterList_20221118" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectAutomlMasterList */
+		SELECT
+			   T1.DOC_SN
+			 <!-- , T1.DOC_NM -->
+			 , CONCAT(T1.DOC_NM, '-----', T1.DOC_SN) DOC_NM 
+			 , T1.STAT_CD
+			 , (CASE WHEN T1.STAT_CD = '00' THEN '업로드'	
+			         WHEN T1.STAT_CD = '10' THEN '데이터 확인'
+			         WHEN T1.STAT_CD = '11' THEN '데이터 전처리'
+			         WHEN T1.STAT_CD = '20' THEN '모델 학습'
+			         WHEN T1.STAT_CD = '30' THEN '모델 확정'
+			         ELSE '기타'
+			   END) AS STAT_CD_NM	
+			 , T1.ROW_CNT
+			 , T1.COLUMN_CNT
+			 , T1.TRAINING_CNT
+			 , T1.FILE_ORI_NM
+			 , T1.ERROR_MSG
+			 , T1.REGI_ID
+			 , IFNULL(DATE_FORMAT(REGI_DTTM, '%Y-%m-%d'), '') AS REGI_DTTM
+		  FROM TB_AUTOML_MASTER T1
+		 WHERE T1.DEL_YN = 'N'
+        <isNotEmpty property="STAT_CD">	AND T1.STAT_CD = #STAT_CD#   											</isNotEmpty>
+        <isNotEmpty  property="FUCTION_GUBUN"	prepend="AND">	
+			<isEqual property="FUCTION_GUBUN" 	compareValue="00"> T1.STAT_CD IN ('00')							</isEqual>		<!-- 00 : 업로드      -->			
+			<isEqual property="FUCTION_GUBUN" 	compareValue="10"> T1.STAT_CD IN ('00', '10')					</isEqual>		<!-- 10 : 데이터 확인  -->
+			<isEqual property="FUCTION_GUBUN" 	compareValue="11"> T1.STAT_CD IN ('00', '10', '11', '20')		</isEqual>		<!-- 11 : 데이터 전처리 -->	
+			<isEqual property="FUCTION_GUBUN" 	compareValue="20"> T1.STAT_CD IN ('11', '20')					</isEqual>		<!-- 20 : 모델 학습    -->		
+			<isEqual property="FUCTION_GUBUN" 	compareValue="30"> T1.STAT_CD IN ('20', '30')					</isEqual>		<!-- 30 : 모델 확정    -->		
+		</isNotEmpty>
+        <isNotEmpty property="FILE_NM">	AND T1.DOC_NM LIKE CONCAT('%',#FILE_NM#,'%')							</isNotEmpty>
+		ORDER BY T1.DOC_SN DESC
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectAutomlMasterListCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectOcrDocMstListCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_MASTER T1
+		 WHERE T1.DEL_YN = 'N'
+        <isNotEmpty property="STAT_CD">	AND T1.STAT_CD = #STAT_CD#   											</isNotEmpty>
+        <isNotEmpty  property="FUCTION_GUBUN"	prepend="AND">	
+			<isEqual property="FUCTION_GUBUN" 	compareValue="00"> T1.STAT_CD IN ('00')							</isEqual>		<!-- 00 : 업로드      -->			
+			<isEqual property="FUCTION_GUBUN" 	compareValue="10"> T1.STAT_CD IN ('00', '10')					</isEqual>		<!-- 10 : 데이터 확인  -->
+			<isEqual property="FUCTION_GUBUN" 	compareValue="11"> T1.STAT_CD IN ('00', '10', '11', '20')		</isEqual>		<!-- 11 : 데이터 전처리 -->	
+			<isEqual property="FUCTION_GUBUN" 	compareValue="20"> T1.STAT_CD IN ('11', '20')					</isEqual>		<!-- 20 : 모델 학습    -->		
+			<isEqual property="FUCTION_GUBUN" 	compareValue="30"> T1.STAT_CD IN ('20', '30')					</isEqual>		<!-- 30 : 모델 확정    -->	
+		</isNotEmpty>
+        <isNotEmpty property="FILE_NM">	AND T1.DOC_NM LIKE CONCAT('%',#FILE_NM#,'%')							</isNotEmpty>
+	</select>
+	
+	<!-- 데이터 읽어 들이기 > 데이터 마스터 목록 [조회] 처리 -->
+ 	<select id="selectOcrDocMstListNew" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectOcrDocMstListNew */
+		SELECT
+			   T1.DOC_SN
+			 , T1.DOC_NM
+			 , T1.STAT_CD
+			 , (CASE WHEN T1.STAT_CD = '00' THEN '업로드'	
+			         WHEN T1.STAT_CD = '10' THEN '데이터 확인'
+			         WHEN T1.STAT_CD = '11' THEN '데이터 전처리'
+			         WHEN T1.STAT_CD = '20' THEN '모델 학습'
+			         WHEN T1.STAT_CD = '30' THEN '모델 확정'
+			         ELSE '기타'
+			   END) as STAT_CD_NM	
+			 , T1.ROW_CNT
+			 , T1.COLUMN_CNT
+			 , T1.TRAINING_CNT
+			 , T1.FILE_ORI_NM
+			 , T1.ERROR_MSG
+			 , T1.REGI_ID
+			 , IFNULL(DATE_FORMAT(REGI_DTTM, '%Y-%m-%d'), '') AS REGI_DTTM
+		  FROM TB_AUTOML_MASTER T1
+		 WHERE T1.DEL_YN = 'N'
+        <isNotEmpty property="STAT_CD">	AND T1.STAT_CD = #STAT_CD#   					</isNotEmpty> 			
+        <isNotEmpty property="FILE_NM">	AND T1.DOC_NM LIKE CONCAT('%',#FILE_NM#,'%')	</isNotEmpty>
+		ORDER BY T1.DOC_SN DESC
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>
+	
+	<select id="selectOcrDocMstListNewCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectOcrDocMstListCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_MASTER T1
+		 WHERE T1.DEL_YN = 'N'
+        <isNotEmpty property="STAT_CD">	AND T1.STAT_CD = #STAT_CD#   					</isNotEmpty> 			
+        <isNotEmpty property="FILE_NM">	AND T1.DOC_NM LIKE CONCAT('%',#FILE_NM#,'%')	</isNotEmpty>
+	</select>	
+ 		 
+ 	<!-- 데이터 읽어 들이기 > 데이터 상세 목록 [조회] 처리 -->
+	<select id="selectAutomlDatareadColumnInfo" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectAutomlDatareadColumnInfo */
+		SELECT
+			  T1.DOC_SN
+			, T1.ROW_SN
+			, (CASE WHEN T1.TEXT_NM_001 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_001) END) TEXT_NM_001
+			, (CASE WHEN T1.TEXT_NM_002 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_002) END) TEXT_NM_002
+			, (CASE WHEN T1.TEXT_NM_003 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_003) END) TEXT_NM_003
+			, (CASE WHEN T1.TEXT_NM_004 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_004) END) TEXT_NM_004
+			, (CASE WHEN T1.TEXT_NM_005 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_005) END) TEXT_NM_005
+			, (CASE WHEN T1.TEXT_NM_006 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_006) END) TEXT_NM_006
+			, (CASE WHEN T1.TEXT_NM_007 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_007) END) TEXT_NM_007
+			, (CASE WHEN T1.TEXT_NM_008 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_008) END) TEXT_NM_008
+			, (CASE WHEN T1.TEXT_NM_009 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_009) END) TEXT_NM_009
+			, (CASE WHEN T1.TEXT_NM_010 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_010) END) TEXT_NM_010
+			, (CASE WHEN T1.TEXT_NM_011 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_011) END) TEXT_NM_011
+			, (CASE WHEN T1.TEXT_NM_012 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_012) END) TEXT_NM_012
+			, (CASE WHEN T1.TEXT_NM_013 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_013) END) TEXT_NM_013
+			, (CASE WHEN T1.TEXT_NM_014 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_014) END) TEXT_NM_014
+			, (CASE WHEN T1.TEXT_NM_015 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_015) END) TEXT_NM_015
+			, (CASE WHEN T1.TEXT_NM_016 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_016) END) TEXT_NM_016
+			, (CASE WHEN T1.TEXT_NM_017 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_017) END) TEXT_NM_017
+			, (CASE WHEN T1.TEXT_NM_018 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_018) END) TEXT_NM_018
+			, (CASE WHEN T1.TEXT_NM_019 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_019) END) TEXT_NM_019
+			, (CASE WHEN T1.TEXT_NM_020 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_020) END) TEXT_NM_020
+			, (CASE WHEN T1.TEXT_NM_021 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_021) END) TEXT_NM_021
+			, (CASE WHEN T1.TEXT_NM_022 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_022) END) TEXT_NM_022
+			, (CASE WHEN T1.TEXT_NM_023 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_023) END) TEXT_NM_023
+			, (CASE WHEN T1.TEXT_NM_024 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_024) END) TEXT_NM_024
+			, (CASE WHEN T1.TEXT_NM_025 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_025) END) TEXT_NM_025
+			, (CASE WHEN T1.TEXT_NM_026 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_026) END) TEXT_NM_026
+			, (CASE WHEN T1.TEXT_NM_027 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_027) END) TEXT_NM_027
+			, (CASE WHEN T1.TEXT_NM_028 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_028) END) TEXT_NM_028
+			, (CASE WHEN T1.TEXT_NM_029 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_029) END) TEXT_NM_029
+			, (CASE WHEN T1.TEXT_NM_030 = 'None' THEN '' ELSE TRIM(T1.TEXT_NM_030) END) TEXT_NM_030
+		 FROM TB_AUTOML_ROW_INFO T1
+	 	WHERE T1.DOC_SN = #DOC_SN#
+		ORDER BY T1.ROW_SN
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectAutomlDatareadColumnInfoCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectAutomlDatareadColumnInfoCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_ROW_INFO
+	 	 WHERE DOC_SN = #DOC_SN#
+	</select>		 
+	 
+	<!-- 데이터 읽어 들이기 > 데이터 상세 목록 [조회] 처리 -->
+	<select id="selectAutomlDatareadColumnInfo_old" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectAutomlDatareadColumnInfo */
+		SELECT
+			  CAST(T1.ROW_SN    as CHAR) as ROW_SN
+			, CAST(T1.COLUMN_SN as CHAR) as COLUMN_SN
+			, T1.TEXT_NM
+			, T1.TEXT_GUBUN
+		 FROM TB_AUTOML_TEXT_TEST T1
+	 	WHERE T1.DOC_SN = #DOC_SN#
+		ORDER BY T1.ROW_SN, T1.COLUMN_SN, T1.TEXT_GUBUN
+	</select>		 
+	 
+	<!-- 데이터 읽어 들이기 > 데이터 마스터 - Insert 처리  --> 
+ 	<insert id="insertAutomlMst" parameterClass="java.util.Map">
+		/* RecognitionDAO.insertAutomlMst */
+		INSERT INTO TB_AUTOML_MASTER ( 
+			  DOC_SN
+			, DOC_NM  
+			, STAT_CD	
+			, FILE_ID	
+			, FILE_ORI_NM	
+			, FILE_FULL_PATH	
+			, REGI_ID
+			, REGI_DTTM
+			, UPDT_ID
+			, UPDT_DTTM
+			, DEL_YN
+		) VALUES (
+			  #DOC_SN#
+			, #DOC_NM#  
+			, #STAT_CD#
+			, #FILE_ID#	
+			, #FILE_ORI_NM#	
+			, #FILE_FULL_PATH#		
+			, #userId#
+			, NOW()
+			, #userId#
+			, NOW()
+			, 'N'
+		)
+	</insert>
+	
+	<!-- 데이터 읽어 들이기 > 엑셀 업로드 파일 - Insert 처리  --> 
+	<insert id="insertAutoMlFile" parameterClass="java.util.Map">
+		/* RecognitionDAO.insertAutoMlFile */
+		INSERT INTO TB_AUTOML_FILE ( 
+			  DOC_SN
+			, FILE_ID
+			, FILE_ORI_NM
+			, FILE_PATH
+			, FILE_URL
+			, FILE_NM
+			, FILE_SIZE
+			, DEL_YN
+			, REGI_ID
+			, REGI_DTTM
+		) VALUES (
+			  #DOC_SN#
+			, #FILE_ID#
+			, #FILE_ORI_NM#
+			, #FILE_PATH#
+			, #FILE_URL#
+			, #FILE_NM#
+			, #FILE_SIZE#
+			, 'N'
+			, #userId#
+			, NOW()
+		)	
+	</insert>
+
+	<!-- 데이터 읽어 들이기 > 엑셀 업로드 파일 - 데이터 마스터 목록 [수정] 처리 -->
+	<update id="updateAutomlMstResult" parameterClass="java.util.Map">
+		/* RecognitionDAO.updateAutomlMstResult */
+		UPDATE TB_AUTOML_MASTER
+		   SET STAT_CD   = #STAT_CD#,
+		       ERROR_MSG = #ERROR_MSG#
+		 WHERE DOC_SN    = #DOC_SN#
+	</update>
+
+	<!-- 데이터 읽어 들이기 > 데이터 마스터 목록 [삭제] 처리 -->
+	<update id="deleteAutomlMst" parameterClass="java.util.Map">
+		/* RecognitionDAO.deleteAutomlMst */
+		UPDATE TB_AUTOML_MASTER
+		   SET DEL_YN = 'Y'
+		 WHERE DOC_SN = #DOC_SN#
+	</update>
+	
+ 	<!-- 데이터 확인 > 데이터 컬럼 상세 목록 [조회] 처리 -->
+	<select id="selectMldataConfirmList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMldataConfirmList */
+		SELECT
+			  T1.DOC_SN
+			, T1.COLUMN_SN
+			, T1.TEXT_NM
+			, T1.TEXT_DATA_TYPE 	
+			, T1.TEXT_TYPE_GUBUN 	
+			, (CASE WHEN T1.TEXT_TYPE_GUBUN = '10' THEN '정수형'	
+			        WHEN T1.TEXT_TYPE_GUBUN = '20' THEN '실수형'		
+			        WHEN T1.TEXT_TYPE_GUBUN = '30' THEN '문자형'
+			        WHEN T1.TEXT_TYPE_GUBUN = '31' THEN '카테고리형'
+			        WHEN T1.TEXT_TYPE_GUBUN = '40' THEN '날짜형'
+			        WHEN T1.TEXT_TYPE_GUBUN = '50' THEN '부울형'
+			        WHEN T1.TEXT_TYPE_GUBUN = '20' THEN '실수형'
+			        ELSE '기타'
+			   END) as TEXT_TYPE_GUBUN_NM			        
+			, T1.USE_YN
+			, (IFNULL(T1.MININUM_VALUE, '')) 		as MININUM_VALUE
+			, (IFNULL(T1.MAXINUM_VALUE, '')) 		as MAXINUM_VALUE
+			, (IFNULL(T1.MEAN_VALUE, '')) 			as MEAN_VALUE
+			, (IFNULL(T1.STANDARD_DEVIATION, '')) 	as STANDARD_DEVIATION
+			, (IFNULL(T1.VARIANCE_VALUE, '')) 		as VARIANCE_VALUE
+			, (IFNULL(T1.PERCENTAGE_25_VALUE, '')) 	as PERCENTAGE_25_VALUE
+			, (IFNULL(T1.PERCENTAGE_50_VALUE, '')) 	as PERCENTAGE_50_VALUE
+			, (IFNULL(T1.PERCENTAGE_75_VALUE, '')) 	as PERCENTAGE_75_VALUE
+			, (IFNULL(T1.MISSING_VALUE_CNT, '')) 	as MISSING_VALUE_CNT
+			, (IFNULL(T1.DUPLICATED_VALUE_CNT, '')) as DUPLICATED_VALUE_CNT 
+			, CASE WHEN T1.TARGET_VALUE_YN = 'Y' THEN 1 ELSE 0 END TARGET_VALUE_YN
+			, CASE WHEN T1.TARGET_VALUE_YN = 'Y' THEN 1 ELSE 0 END ORG_TARGET_VALUE_YN
+			, T1.REGI_ID
+			, T1.REGI_DTTM
+			, T1.UPDT_ID
+			, T1.UPDT_DTTM
+		 FROM TB_AUTOML_COLUMN_INFO T1
+	 	WHERE T1.DOC_SN = #DOC_SN#
+		ORDER BY T1.COLUMN_SN
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectMldataConfirmListCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMldataConfirmListCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_COLUMN_INFO 
+	 	 WHERE DOC_SN = #DOC_SN#
+	</select>
+		
+ 	<!-- 데이터 확인 > 02:데이터 분포 (Boxplot), 03:정규분포 (Normal Distribution) 처리 -->
+	<select id="selectMldataConfirmTextImage" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMldataConfirmTextImage */
+		SELECT
+			  DOC_SN
+			, TEXT_SN
+			, FILE_NM	
+			, FILE_PATH
+			, FILE_FULL_PATH
+			, REPLACE(FILE_FULL_PATH, '/', '\\') as FILE_FULL_PATH_R
+		 FROM TB_AUTOML_TEXT_IMAGE 
+	 	WHERE DOC_SN      = #DOC_SN#
+	 	  AND TEXT_SN     = $TEXT_SN$
+	 	  AND IMAGE_GUBUN = #IMAGE_GUBUN#		<!-- 02:데이터 분포 (Boxplot), 03:정규분포 (Normal Distribution) -->
+		<dynamic>							
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectMldataConfirmTextImageCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMldataConfirmTextImageCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_TEXT_IMAGE
+	 	 WHERE DOC_SN     = #DOC_SN#
+	 	  AND TEXT_SN     = $TEXT_SN$
+	 	  AND IMAGE_GUBUN = #IMAGE_GUBUN#
+	</select>	
+
+	<!-- 데이터 확인 > 데이터 마스터 목록 <수정> 처리 -->
+	<update id="dataConfirmProcess" parameterClass="java.util.Map">
+		/* RecognitionDAO.dataConfirmProcess */
+		UPDATE TB_AUTOML_MASTER
+		   SET STAT_CD = #STAT_CD#
+		 WHERE DOC_SN  = #DOC_SN#
+	</update>
+
+	<!-- 데이터 전처리 > 목표변수 적용 -->
+	<update id="precprocessingTargetApply" parameterClass="java.util.Map">
+		/* RecognitionDAO.precprocessingTargetApply */
+		UPDATE TB_AUTOML_COLUMN_INFO
+		SET	   TARGET_VALUE_YN = CASE WHEN #TARGET_VALUE_YN# = 1 THEN 'Y' ELSE 'N' END
+			 , UPDT_ID         = #userId#
+			 , UPDT_DTTM       = NOW()
+		 WHERE DOC_SN    = #DOC_SN#
+		   AND COLUMN_SN = $COLUMN_SN$
+	</update>
+		
+	<!-- 데이터 전처리 > 데이터 정제(Data Cleansing) - 데이터 존재여부 체크 -->	
+	<select id="selectMlpreprocessingChk" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlpreprocessingChk */
+		SELECT DOC_SN
+		  FROM TB_AUTOML_PREPROCESSING 
+		 WHERE DOC_SN = #DOC_SN#
+	</select>
+		
+ 	<!-- 데이터 전처리 > 데이터 정제(Data Cleansing) 조회 처리 -->
+ 	<!--  (설명) 데이터가 없는 경우 - 기본 데이터(DOC_SN : 220000000000000) 조회 처리-->
+	<select id="selectMlpreprocessingDataCleansingNoList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlpreprocessingDataCleansingNoList */
+		SELECT 
+			#DOC_SN#	AS DOC_SN
+		  , t.ROW_SN
+		  , t.PREPROCESSING_GUBUN
+		  , t.SETTING_VALUE
+		  , t.SETTING_VALUE AS ORG_SETTING_VALUE		  
+		  , CASE WHEN t.REMOVE_YN = 'Y' THEN 1 ELSE 0 END REMOVE_YN
+		  , CASE WHEN t.REMOVE_YN = 'Y' THEN 1 ELSE 0 END ORG_REMOVE_YN
+		  , CASE WHEN t.USE_YN    = 'Y' THEN 1 ELSE 0 END USE_YN
+		  , CASE WHEN t.USE_YN    = 'Y' THEN 1 ELSE 0 END ORG_USE_YN
+		FROM (
+			SELECT
+				  '1'  AS ROW_SN
+				, '중복값 처리'               	AS PREPROCESSING_GUBUN
+				, DUPLICATED_SETTING_VALUE 	AS SETTING_VALUE
+				, DUPLICATED_REMOVE_YN     	AS REMOVE_YN
+				, DUPLICATED_USE_YN        	AS USE_YN
+			 FROM TB_AUTOML_PREPROCESSING
+		 	WHERE DOC_SN = '220000000000000'
+		 	
+		 	UNION ALL
+		 	
+			SELECT
+				  '2'  AS ROW_SN
+				, '결측값 처리'               	AS PREPROCESSING_GUBUN
+				, MISSING_SETTING_VALUE		AS SETTING_VALUE
+				, MISSING_REMOVE_YN			AS REMOVE_YN
+				, MISSING_USE_YN			AS USE_YN
+			 FROM TB_AUTOML_PREPROCESSING
+		 	WHERE DOC_SN = '220000000000000'
+		 	
+		 	UNION ALL
+		 	
+			SELECT
+				  '3'  AS ROW_SN
+				, '이상값 처리'               	AS PREPROCESSING_GUBUN
+				, OUTLIER_SETTING_VALUE		AS SETTING_VALUE		
+				, OUTLIER_REMOVE_YN			AS REMOVE_YN
+				, OUTLIER_USE_YN			AS USE_YN
+			 FROM TB_AUTOML_PREPROCESSING
+		 	WHERE DOC_SN = '220000000000000'
+		) t
+		WHERE 1=1
+		ORDER BY t.ROW_SN 	
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectMlpreprocessingDataCleansingListNoCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMlpreprocessingDataCleansingListNoCount */
+		SELECT (COUNT(1) + 2) CNT
+		  FROM TB_AUTOML_PREPROCESSING
+	 	 WHERE DOC_SN = '220000000000000'
+	</select>
+	
+	<!-- 데이터 전처리 > 데이터 정제(Data Cleansing) 조회 처리 -->
+	<select id="selectMlpreprocessingDataCleansingList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlpreprocessingDataCleansingList */
+		SELECT 
+			t.DOC_SN
+		  , t.ROW_SN
+		  , t.PREPROCESSING_GUBUN
+		  , t.SETTING_VALUE
+		  , CASE WHEN t.REMOVE_YN = 'Y' THEN 1 ELSE 0 END REMOVE_YN
+		  , CASE WHEN t.REMOVE_YN = 'Y' THEN 1 ELSE 0 END ORG_REMOVE_YN
+		  , CASE WHEN t.USE_YN    = 'Y' THEN 1 ELSE 0 END USE_YN
+		  , CASE WHEN t.USE_YN    = 'Y' THEN 1 ELSE 0 END ORG_USE_YN
+		FROM (
+			SELECT
+				  DOC_SN
+				, '1'  AS ROW_SN
+				, '중복값 처리'               	AS PREPROCESSING_GUBUN
+				, DUPLICATED_SETTING_VALUE 	AS SETTING_VALUE
+				, DUPLICATED_REMOVE_YN     	AS REMOVE_YN
+				, DUPLICATED_USE_YN        	AS USE_YN
+			 FROM TB_AUTOML_PREPROCESSING
+		 	WHERE DOC_SN = #DOC_SN#
+		 	
+		 	UNION ALL
+		 	
+			SELECT
+				  DOC_SN
+				, '2'  AS ROW_SN
+				, '결측값 처리'               	AS PREPROCESSING_GUBUN
+				, MISSING_SETTING_VALUE		AS SETTING_VALUE
+				, MISSING_REMOVE_YN			AS REMOVE_YN
+				, MISSING_USE_YN			AS USE_YN
+			 FROM TB_AUTOML_PREPROCESSING
+		 	WHERE DOC_SN = #DOC_SN#
+		 	
+		 	UNION ALL
+		 	
+			SELECT
+				  DOC_SN
+				, '3'  AS ROW_SN
+				, '이상값 처리'               	AS PREPROCESSING_GUBUN
+				, OUTLIER_SETTING_VALUE		AS SETTING_VALUE		
+				, OUTLIER_REMOVE_YN			AS REMOVE_YN
+				, OUTLIER_USE_YN			AS USE_YN
+			 FROM TB_AUTOML_PREPROCESSING
+		 	WHERE DOC_SN = #DOC_SN#
+		) t
+		WHERE 1=1
+		ORDER BY t.DOC_SN, t.ROW_SN 	
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectMlpreprocessingDataCleansingListCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMlpreprocessingDataCleansingListCount */
+		SELECT (COUNT(1) + 2) CNT
+		  FROM TB_AUTOML_PREPROCESSING
+	 	 WHERE DOC_SN = #DOC_SN#
+	</select>
+		
+	<!-- 데이터 전처리 > 데이터 전처리 적용 - 데이터  전처리(TB_AUTOML_PREPROCESSING) 데이터 존재여부 체크  -->
+	<select id="selectMlpreprocessingDataExistingChk" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlpreprocessingDataExistingChk */
+		SELECT DOC_SN
+		  FROM TB_AUTOML_PREPROCESSING
+	 	 WHERE DOC_SN = #DOC_SN#
+	</select>	
+	
+	<!-- 데이터 전처리 > 데이터 전처리 적용 - 데이터  전처리(TB_AUTOML_PREPROCESSING) 데이터 Insert 처리  --> 
+	<insert id="insertPreprocessingData" parameterClass="java.util.Map">
+		/* RecognitionDAO.insertOcrFile */
+		INSERT INTO TB_AUTOML_PREPROCESSING ( 
+			  DOC_SN
+			, DUPLICATED_SETTING_VALUE
+			, MISSING_SETTING_VALUE
+			, OUTLIER_SETTING_VALUE
+			, REGI_ID
+			, REGI_DTTM
+		) VALUES (
+			  #DOC_SN#
+			, '10'
+			, '20'
+			, '30'
+			, #userId#
+			, NOW()
+		)	
+	</insert>		
+		
+	<!-- 데이터 전처리 > 데이터 전처리 적용 - 중복값 처리 -->
+	<update id="precprocessingDataCleansingDuplocated" parameterClass="java.util.Map">
+		/* RecognitionDAO.precprocessingDataCleansingDuplocated */
+		UPDATE TB_AUTOML_PREPROCESSING
+		SET	   DUPLICATED_SETTING_VALUE = #SETTING_VALUE#
+		     , DUPLICATED_REMOVE_YN     = CASE WHEN #REMOVE_YN# = 1 THEN 'Y' ELSE 'N' END
+		     , DUPLICATED_USE_YN        = CASE WHEN #USE_YN#    = 1 THEN 'Y' ELSE 'N' END
+			 , UPDT_ID   = #userId#
+			 , UPDT_DTTM = NOW()
+		 WHERE DOC_SN    = #DOC_SN#
+	</update>	
+	
+	<!-- 데이터 전처리 > 데이터 전처리 적용 - 결측값 처리 -->
+	<update id="precprocessingDataCleansingMissing" parameterClass="java.util.Map">
+		/* RecognitionDAO.precprocessingDataCleansingMissing */
+		UPDATE TB_AUTOML_PREPROCESSING
+		SET	   MISSING_SETTING_VALUE = #SETTING_VALUE#		     
+		     , MISSING_REMOVE_YN     = CASE WHEN #REMOVE_YN# = 1 THEN 'Y' ELSE 'N' END
+		     , MISSING_USE_YN        = CASE WHEN #USE_YN#    = 1 THEN 'Y' ELSE 'N' END
+			 , UPDT_ID   = #userId#
+			 , UPDT_DTTM = NOW()
+		 WHERE DOC_SN    = #DOC_SN#
+	</update>	
+		
+	<!-- 데이터 전처리 > 데이터 전처리 적용 - 이상값 처리 -->
+	<update id="precprocessingDataCleansingOutlier" parameterClass="java.util.Map">
+		/* RecognitionDAO.precprocessingDataCleansingOutlier */
+		UPDATE TB_AUTOML_PREPROCESSING
+		SET	   OUTLIER_SETTING_VALUE = #SETTING_VALUE#		     
+		     , OUTLIER_REMOVE_YN     = CASE WHEN #REMOVE_YN# = 1 THEN 'Y' ELSE 'N' END
+		     , OUTLIER_USE_YN        = CASE WHEN #USE_YN#    = 1 THEN 'Y' ELSE 'N' END
+			 , UPDT_ID   = #userId#
+			 , UPDT_DTTM = NOW()
+		 WHERE DOC_SN    = #DOC_SN#
+	</update>	
+
+	<!-- 데이터 전처리 > 데이터 전처리 적용 - 데이터 마스터 목록 <수정> 처리 -->
+	<update id="precprocessingDataMasterUpdate" parameterClass="java.util.Map">
+		/* RecognitionDAO.precprocessingDataMasterUpdate */
+		UPDATE TB_AUTOML_MASTER
+		   SET STAT_CD = '11'			<!-- 처리상태 코드 : 11:데이터 전처리 -->
+		 WHERE DOC_SN  = #DOC_SN#		
+	</update>
+		
+	<!-- 모델 학습 > 모델 학습 결과(TB_AUTOML_TRAINING_RESULT) 데이터 존재여부 체크 -->	
+	<select id="selectTrainingResultChk" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectTrainingResultChk */
+		SELECT DOC_SN
+		     , TRAINING_CNT
+		  FROM TB_AUTOML_TRAINING_RESULT 
+		 WHERE DOC_SN         = #DOC_SN#
+		   AND TRAINING_GUBUN = #TRAINING_GUBUN#
+	</select>
+			
+	<!-- 모델 학습 > 모델 학습 결과 데이터 Insert 처리  --> 
+	<insert id="insertTrainingResultData" parameterClass="java.util.Map">
+		/* RecognitionDAO.insertTrainingResultData */
+		INSERT TB_AUTOML_TRAINING_RESULT  ( 
+			  DOC_SN
+			, TRAINING_GUBUN
+			, TRAINING_DTTM
+			, TRAINING_CNT
+			, REGI_ID
+			, REGI_DTTM
+		) VALUES (
+			  #DOC_SN#
+			, #TRAINING_GUBUN#
+			, NOW()
+			, 1
+			, #USER_ID#
+			, NOW()
+		)	
+	</insert>		
+		
+	<!-- 모델 학습 > 모델 학습 결과 데이터 Update 처리 -->
+	<update id="updateTrainingResultData" parameterClass="java.util.Map">
+		/* RecognitionDAO.updateTrainingResultData */
+		UPDATE TB_AUTOML_TRAINING_RESULT
+		SET	   TRAINING_DTTM  = NOW()
+		     , TRAINING_CNT   = $TRAINING_CNT$
+			 , UPDT_ID        = #USER_ID#
+			 , UPDT_DTTM      = NOW()
+		 WHERE DOC_SN         = #DOC_SN#
+		   AND TRAINING_GUBUN = #TRAINING_GUBUN#
+	</update>
+	
+ 	<!-- 모델 평가 > 모델 학습 결과 <조회> 처리 -->
+	<select id="selectMlEvaluationResultList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlEvaluationResultList */
+		SELECT
+			  T1.DOC_SN
+			, (SELECT a.STAT_CD FROM TB_AUTOML_MASTER a WHERE a.DOC_SN = T1.DOC_SN) AS STAT_CD
+			, T1.TRAINING_GUBUN
+			, (CASE WHEN T1.TRAINING_GUBUN = '10' THEN 'Gradient Boost'	
+			        WHEN T1.TRAINING_GUBUN = '11' THEN '의사결정트리'		
+			        WHEN T1.TRAINING_GUBUN = '12' THEN 'Random Forest'
+			        WHEN T1.TRAINING_GUBUN = '13' THEN 'SVM'
+			        WHEN T1.TRAINING_GUBUN = '14' THEN '신경망'
+			        WHEN T1.TRAINING_GUBUN = '20' THEN 'K-평균 군집화'
+			        ELSE '기타'
+			   END) AS TRAINING_GUBUN_NM
+			, T1.PRECISION_RATE
+			, T1.RECALL_RATE
+			, T1.F1_SCORE	
+			, IFNULL(DATE_FORMAT(T1.TRAINING_DTTM, '%Y-%m-%d'), '')     AS TRAINING_DTTM
+			, T1.TRAINING_CNT
+			, T1.REGI_ID
+			, IFNULL(DATE_FORMAT(T1.REGI_DTTM, '%Y-%m-%d'), '')         AS REGI_DTTM
+			, IFNULL(DATE_FORMAT(T1.MODELCONFIRM_DTTM, '%Y-%m-%d'), '') AS MODELCONFIRM_DTTM
+		 FROM TB_AUTOML_TRAINING_RESULT T1
+	 	WHERE T1.DOC_SN = #DOC_SN#
+		ORDER BY T1.TRAINING_GUBUN
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectMlEvaluationResultListCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMldataConfirmListCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_TRAINING_RESULT
+	 	 WHERE DOC_SN = #DOC_SN#
+	</select>
+
+	<!-- 모델 평가 > 모델 학습 결과 <모델 확정> 처리 -->
+	<update id="modelEvaluationTrainingResult" parameterClass="java.util.Map">
+		/* RecognitionDAO.modelEvaluationTrainingResult */
+		UPDATE TB_AUTOML_TRAINING_RESULT
+		   SET MODELCONFIRM_YN   = 'Y'
+		     , MODELCONFIRM_DTTM = NOW()
+		 WHERE DOC_SN         = #DOC_SN#
+		   AND TRAINING_GUBUN = #TRAINING_GUBUN#
+	</update>
+		
+ 	<!-- 모델 평가 > 모델 학습 결과 <ROC Curve, Confusion Matrix 이미지> 처리 -->
+	<select id="selectMlmodelEvaluationImage" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlmodelEvaluationImage */
+		SELECT
+			  DOC_SN
+			, TRAINING_GUBUN
+			, FILE_NM	
+			, FILE_PATH
+			, FILE_FULL_PATH
+			, REPLACE(FILE_FULL_PATH, '/', '\\') as FILE_FULL_PATH_R
+		 FROM TB_AUTOML_TRAINING_IMAGE
+	 	WHERE DOC_SN         = #DOC_SN#
+	 	  AND TRAINING_GUBUN = #TRAINING_GUBUN#
+	 	  AND IMAGE_GUBUN    = #IMAGE_GUBUN#
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>		
+	
+	<select id="selectMlmodelEvaluationImageCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMlmodelEvaluationImageCount */
+		SELECT COUNT(1) CNT
+		  FROM TB_AUTOML_TRAINING_IMAGE
+	 	 WHERE DOC_SN         = #DOC_SN#
+	 	   AND TRAINING_GUBUN = #TRAINING_GUBUN#
+	 	   AND IMAGE_GUBUN    = #IMAGE_GUBUN#
+	</select>	
+		
+ 	<!-- 모델 평가 > 모델 학습 결과 <모델 학습 결과 목록> 처리 -->
+	<select id="selectMlmodelEvaluationList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		/* RecognitionDAO.selectMlmodelEvaluationList */
+		SELECT 
+			t.DOC_SN
+		  , t.ROW_SN
+		  , t.LIST_NM
+		  , t.LIST_SCORE
+		FROM (
+			SELECT
+				  DOC_SN
+				, '1'  						AS ROW_SN
+				, '정밀도(Precision Rate)'    AS LIST_NM
+				, PRECISION_RATE 			AS LIST_SCORE
+			 FROM TB_AUTOML_TRAINING_RESULT
+		 	WHERE DOC_SN         = #DOC_SN#
+		 	  AND TRAINING_GUBUN = #TRAINING_GUBUN#
+		 	
+		 	UNION ALL
+		 	
+			SELECT
+				  DOC_SN
+				, '2'  						AS ROW_SN
+				, '재현율(Recall Rate)'    	AS LIST_NM
+				, RECALL_RATE 				AS LIST_SCORE
+			 FROM TB_AUTOML_TRAINING_RESULT
+		 	WHERE DOC_SN         = #DOC_SN#
+		 	  AND TRAINING_GUBUN = #TRAINING_GUBUN#
+		 	
+		 	UNION ALL
+		 	
+			SELECT
+				  DOC_SN
+				, '3'  						AS ROW_SN
+				, 'F1-score'    			AS LIST_NM
+				, F1_SCORE 					AS LIST_SCORE
+			 FROM TB_AUTOML_TRAINING_RESULT
+		 	WHERE DOC_SN         = #DOC_SN#
+		 	  AND TRAINING_GUBUN = #TRAINING_GUBUN#
+		) t
+		WHERE 1=1
+		ORDER BY t.DOC_SN, t.ROW_SN 	
+		<dynamic>
+			<include refid="pageend"/>
+		</dynamic>		
+	</select>	
+	
+	<select id="selectMlmodelEvaluationListCount" parameterClass="java.util.Map" resultClass="java.lang.String">
+		/* RecognitionDAO.selectMlmodelEvaluationListCount */
+		SELECT (COUNT(1) + 2) CNT
+		  FROM TB_AUTOML_TRAINING_RESULT
+	 	 WHERE DOC_SN = #DOC_SN#
+	 	   AND TRAINING_GUBUN = #TRAINING_GUBUN#
+	</select>
+		
+			
+</sqlMap>

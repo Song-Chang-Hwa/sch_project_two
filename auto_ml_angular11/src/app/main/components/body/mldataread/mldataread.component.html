@@ -1,0 +1,113 @@
+<h2 class="tit-level1">데이터 읽어 들이기</h2>
+
+<div class="subConView">			
+	<div class="conWrap">
+
+		<div class="colRow">
+			<div class="col30" style="min-width:650px;">
+				<div class="roundBorder" style="height:800px;">
+					<div class="writeType01">										
+						<div class="requiredInfor">					
+							<div class="form-Area">
+								<div class="form-group">
+									<label class="control-label"><span class="">문서 명</span></label>
+									<div class="formInput">
+										<input type="text" class="form-control" [(ngModel)]="searchtxt" (keyup.enter)="onSearchOcrDocMstList('0')">
+									</div>																			
+								</div>
+								<!-- 
+								<div class="form-group">
+									<label class="control-label">처리상태</label>
+									<div class="formInput">
+										<div class="selects">
+											<select class="form-control" [(ngModel)]="searchStatCd" name="">
+												<option value="" selected="">전체</option>
+												<option value="00">업로드</option>
+												<option value="10">데이터 확인</option>
+												<option value="11">데이터 전처리</option>
+												<option value="20">모델 확습</option>
+												<option value="30">모델 확정</option>
+												<option value="40">에러</option>
+											</select>
+										</div>
+									</div>																				
+								</div>
+													 -->									
+							</div>
+						</div>
+					</div>							
+
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>Total : <span>{{OCRTABLETOTCNT}}</span></li>									
+							</ul>
+							
+							<!-- 버튼 -->
+							<div class="buttonGroup">
+								<div class="BtnGroupR">
+									<a href="javascript:void(0);" class="btn btn-info" (click)="onSearchOcrDocMstList('0')">조회</a>
+									<a href="javascript:void(0);" class="btn btn-primary" (click)="showFileUploadModal()">신규</a>
+								</div>
+							</div>
+							<!-- 버튼 끝 -->
+						</div>
+						<div class="table_type1" >
+							<table id="ocrDocMst" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page1></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col40" style="min-width:1200px;">
+				<div class="roundBorder" style="height:800px;">
+					<div class="grid-wrap">
+						<div class="board_top">
+							<ul class="board_total">	
+								<li>Total : <span>{{OCRTEXTTABLETOTCNT}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>[ 데이터 업로드 결과 ]</span></li>													
+							</ul>
+						</div>
+						<div class="table_type1" >
+							<table id="ocrDocText" summary="목록" style="width: 100%;">
+							</table>
+						</div>
+						<div class="board_bottom">
+							<app-page #page2></app-page>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+
+<div class="modal fade" id="fileUploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">신규 파일 업로드</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">            
+                <div class="mb-3">
+				  <label for="formFile" class="form-label">파일</label>                
+                  <input #fileUpload1 class="form-control" type="file" id="fileUpload1" accept=".pdf,image/*" (change)='onFileChange1($event.target.files)'>
+				</div>
+				<div class="mb-3">
+					<label for="formFile" class="form-label">문서 명</label>				
+					<input id="BUSINESS_NM" type="text" class="form-control"  [(ngModel)]="BUSINESS_NM">                  
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"   (click)='onFileUpload()'>등록</button>
+                <button type="button" class="btn btn-secondary" (click)='onCloseModal()'>닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- .main-section e -->
